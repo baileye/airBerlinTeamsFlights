@@ -76,11 +76,15 @@ bot.dialog("/routeQuery", [
 // ]);
 
 // API QUERY
-// SAMPLE: https://xap.ix-io.net/api/v1/airberlin_lab_2016/available_combinations?filter%5Bdeparture%5D=LHR&filter%5Bdestination%5D=AAL&fields%5Bavailable_combinations%5D=destination%2Cdeparture%2Crandom_id%2Creturn_flight_info_0_flight_id%2Creturn_flight_info_0_last_seats%2Creturn_flight_info_1_requested_count%2Creturn_flight_info_1_passenger_type%2Creturn_flight_info_2_currency%2Creturn_flight_info_2_total%2Conward_flight_info_0_flight_id%2Conward_flight_info_0_last_seats%2Conward_flight_info_1_requested_count%2Conward_flight_info_1_passenger_type%2Conward_flight_info_2_currency%2Conward_flight_info_2_total&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100
+// SAMPLE: https://xap.ix-io.net/api/v1/airberlin_lab_2016/available_combinations
+// ?filter%5Bdeparture%5D=LHR
+// &filter%5Bdestination%5D=AAL
+// &fields%5Bavailable_combinations%5D=destination%2Cdeparture%2Crandom_id%2Creturn_flight_info_0_flight_id%2Creturn_flight_info_0_last_seats%2Creturn_flight_info_1_requested_count%2Creturn_flight_info_1_passenger_type%2Creturn_flight_info_2_currency%2Creturn_flight_info_2_total%2Conward_flight_info_0_flight_id%2Conward_flight_info_0_last_seats%2Conward_flight_info_1_requested_count%2Conward_flight_info_1_passenger_type%2Conward_flight_info_2_currency%2Conward_flight_info_2_total&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100
 
 
 function queryAPI(origin, destination, apiResponseCallback) {
   var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D=" + destination;
+  params += "&fields%5Bavailable_combinations%5D=destination%2Cdeparture%2Crandom_id%2Creturn_flight_info_0_flight_id%2Creturn_flight_info_0_last_seats%2Creturn_flight_info_1_requested_count%2Creturn_flight_info_1_passenger_type%2Creturn_flight_info_2_currency%2Creturn_flight_info_2_total%2Conward_flight_info_0_flight_id%2Conward_flight_info_0_last_seats%2Conward_flight_info_1_requested_count%2Conward_flight_info_1_passenger_type%2Conward_flight_info_2_currency%2Conward_flight_info_2_total&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100";
   var options = {
     host: 'xap.ix-io.net',
     path: '/api/v1/airberlin_lab_2016/available_combinations'+params,
@@ -91,7 +95,6 @@ function queryAPI(origin, destination, apiResponseCallback) {
     }
   };
 
-  
   http.get(options, function (res) {
     var apiResponseString = '';
     console.log('Status Code: ' + res.statusCode);
