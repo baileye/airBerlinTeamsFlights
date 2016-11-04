@@ -41,8 +41,8 @@ var apiToken = process.env.APITOKEN;
 var model = process.env.LUISMODEL 
 var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
-intents.matches('\trip', '/routeQuery');
-intents.matches('\help', '/help');
+intents.matches('trip', '/routeQuery');
+intents.matches('help', '/help');
 intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
 //=========================================================
