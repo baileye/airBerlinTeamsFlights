@@ -73,11 +73,11 @@ bot.dialog("/routeQuery", [
     session.dialogData.destination = results.response;
     session.send("Looking up flights from " + session.dialogData.origin + " to " + session.dialogData.destination + " for you now...");
     queryAPI(session.dialogData.origin, session.dialogData.destination, function(err, res) {
-      if (err) {
-        session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
-      } else {
+      // if (err) {
+      //   session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
+      // } else {
         session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + "next Thursday! Go to <a href='https://www.airberlin.com/en/site/start.php'>Air Berlin</a> for more information");
-      }
+      // }
       session.endDialog();
     });
   }
