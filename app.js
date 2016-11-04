@@ -64,7 +64,7 @@ bot.dialog("/routeQuery", [
     queryAPI(session.dialogData.origin.entity, session.dialogData.destination.entity, function(err, res) {
       session.send("Results will be here");
       session.endDialog();
-    })
+    });
   }
 ]);
 
@@ -79,7 +79,7 @@ bot.dialog("/routeQuery", [
 
 
 function queryAPI(origin, destination, apiResponseCallback) {
-  var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D="+destination;
+  var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D=" + destination;
   var options = {
     host: 'xap.ix-io.net',
     path: '/api/v1/airberlin_lab_2016/available_combinations'+params,
