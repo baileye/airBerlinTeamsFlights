@@ -1,5 +1,5 @@
 {
-  "name": "air berlin flight query",
+  "name": "airberlinflightquery",
   "version": "1.0.0",
   "description": "Air Berlin route and flight checking app.",
   "main": "app.js",
