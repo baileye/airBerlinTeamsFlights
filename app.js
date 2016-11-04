@@ -72,7 +72,7 @@ bot.dialog("/routeQuery", [
     session.send("Looking up flights from " + session.dialogData.origin + " to " + session.dialogData.destination + " for you now...");
     queryAPI(session.dialogData.origin, session.dialogData.destination, function(err, res) {
       if (err) {
-        session.send("Woops, something went wrong. How about you try again?");
+        session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
       } else {
         session.send("How about these flight options...");
       }
@@ -107,7 +107,12 @@ function queryAPI(origin, destination, apiResponseCallback) {
     });
 
     res.on('end', function () {
-      var apiResponseObject = JSON.parse(apiResponseString);
+      var apiResponseObject;
+      try {
+        apiResponseObject = JSON.parse(apiResponseString);
+      } catch (e) {
+        apiResponseCallback(new Error(e.message));
+      }
 
       if (apiResponseObject.error) {
         console.log("API error: " + apiResponseObject.error.message);
