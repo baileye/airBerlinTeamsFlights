@@ -53,11 +53,11 @@ bot.dialog("/", [
 
 bot.dialog("/routeQuery", [
   function (session) {
-    builder.Prompts.choice(session, "What city are you starting your journey in?", ["LHR", "AAL"]);
+    builder.Prompts.choice(session, "What city are you starting your journey in?", ["LON", "PAR"]);
   },
   function (session, results) {
     session.dialogData.origin = results.response;
-    builder.Prompts.choice(session, "Where would you like to fly to?", ["LHR", "AAL"]);
+    builder.Prompts.choice(session, "Where would you like to fly to?", ["LON", "PAR"]);
   },
   function (session, results) {
     session.dialogData.destination = results.response;
