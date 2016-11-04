@@ -94,6 +94,7 @@ function queryAPI(origin, destination, apiResponseCallback) {
   http.get(options, function (res) {
     var apiResponseString = '';
     console.log('Status Code: ' + res.statusCode);
+    console.log(res);
     if (res.statusCode != 200) {
       apiResponseCallback(new Error("Non 200 Response"));
     }
