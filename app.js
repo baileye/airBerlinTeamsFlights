@@ -47,17 +47,18 @@ var apiToken = process.env.APITOKEN;
 bot.dialog("/", [
   function (session, args, next) {
     console.log('start session');
+    session.send("Hi, I'm the Air Berlin Flight query bot. I can help you find flights with Air Berlin. Right now I only understand airport codes, e.g. 'LON' or 'PAR'.");
     session.beginDialog("/routeQuery");
   }
 ]);
 
 bot.dialog("/routeQuery", [
   function (session) {
-    builder.Prompts.choice(session, "What city are you starting your journey in?", ["LON", "PAR"]);
+    builder.Prompts.text(session, "What city are you starting your journey in?");
   },
   function (session, results) {
     session.dialogData.origin = results.response;
-    builder.Prompts.choice(session, "Where would you like to fly to?", ["LON", "PAR"]);
+    builder.Prompts.text(session, "Where would you like to fly to?");
   },
   function (session, results) {
     session.dialogData.destination = results.response;
@@ -66,7 +67,7 @@ bot.dialog("/routeQuery", [
       if (err) {
         session.send("Woops, something went wrong. How about you try again?");
       } else {
-        session.send("Results will be here");
+        session.send("How about these flight options...");
       }
       session.endDialog();
     });
@@ -79,19 +80,12 @@ bot.dialog("/routeQuery", [
 //   }
 // ]);
 
-// API QUERY
-// SAMPLE: https://xap.ix-io.net/api/v1/airberlin_lab_2016/available_combinations
-// ?filter%5Bdeparture%5D=LHR
-// &filter%5Bdestination%5D=AAL
-// &fields%5Bavailable_combinations%5D=destination%2Cdeparture%2Crandom_id%2Creturn_flight_info_0_flight_id%2Creturn_flight_info_0_last_seats%2Creturn_flight_info_1_requested_count%2Creturn_flight_info_1_passenger_type%2Creturn_flight_info_2_currency%2Creturn_flight_info_2_total%2Conward_flight_info_0_flight_id%2Conward_flight_info_0_last_seats%2Conward_flight_info_1_requested_count%2Conward_flight_info_1_passenger_type%2Conward_flight_info_2_currency%2Conward_flight_info_2_total&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100
-
-
 function queryAPI(origin, destination, apiResponseCallback) {
   var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D=" + destination;
-  params += "&fields%5Bavailable_combinations%5D=destination%2Cdeparture%2Crandom_id%2Creturn_flight_info_0_flight_id%2Creturn_flight_info_0_last_seats%2Creturn_flight_info_1_requested_count%2Creturn_flight_info_1_passenger_type%2Creturn_flight_info_2_currency%2Creturn_flight_info_2_total%2Conward_flight_info_0_flight_id%2Conward_flight_info_0_last_seats%2Conward_flight_info_1_requested_count%2Conward_flight_info_1_passenger_type%2Conward_flight_info_2_currency%2Conward_flight_info_2_total&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100";
+  params += "&fields%5Bavailabilities%5D=destination%2Cdeparture%2Crandom_id%2Cprevious_outbound_flight_date%2Cnext_outbound_flight_date&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100";
   var options = {
     host: 'xap.ix-io.net',
-    path: '/api/v1/airberlin_lab_2016/available_combinations'+params,
+    path: '/api/v1/airberlin_lab_2016/availabilities'+params,
     // auth: apiToken,
     headers: {
       "Accept": "application/json",
@@ -107,24 +101,22 @@ function queryAPI(origin, destination, apiResponseCallback) {
       apiResponseCallback(new Error("Non 200 Response"));
     }
 
-  //   res.on('data', function (data) {
-  //     apiResponseString += data;
-  //   });
+    res.on('data', function (data) {
+      apiResponseString += data;
+    });
 
-  //   res.on('end', function () {
-  //     var apiResponseObject = JSON.parse(apiResponseString);
+    res.on('end', function () {
+      var apiResponseObject = JSON.parse(apiResponseString);
 
-  //     if (apiResponseObject.error) {
-  //       console.log("API error: " + apiResponseObject.error.message);
-  //       apiResponseCallback(new Error(apiResponseObject.error.message));
-  //     } else {
-  //       apiResponseCallback(null, apiResponseObject);
-  //     }
-  //   });
+      if (apiResponseObject.error) {
+        console.log("API error: " + apiResponseObject.error.message);
+        apiResponseCallback(new Error(apiResponseObject.error.message));
+      } else {
+        apiResponseCallback(null, apiResponseObject);
+      }
+    });
   }).on('error', function (e) {
     console.log("Communications error: " + e.message);
     apiResponseCallback(new Error(e.message));
   });
-
-  apiResponseCallback(null, null);
 }
