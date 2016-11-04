@@ -43,7 +43,7 @@ var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
 intents.matches(/^trip/i, '/routeQuery');
 // intents.matches(/^help/i, '/help');
-intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
+intents.onDefault('/help');
 
 intents.matches('flightquery', '/routeQuery');
 
@@ -97,7 +97,7 @@ function queryAPI(origin, destination, apiResponseCallback) {
   https.get(options, function (res) {
     var apiResponseString = '';
     console.log('Status Code: ' + res.statusCode);
-    console.log(res);
+    //console.log(res);
     if (res.statusCode != 200) {
       apiResponseCallback(new Error("Non 200 Response"));
     }
