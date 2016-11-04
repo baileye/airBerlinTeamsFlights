@@ -111,10 +111,10 @@ function queryAPI(origin, destination, apiResponseCallback) {
       try {
         apiResponseObject = JSON.parse(apiResponseString);
       } catch (e) {
-        apiResponseCallback('JSON parsing error');
+        // apiResponseCallback('JSON parsing error');
       }
 
-      if (apiResponseObject.error) {
+      if ( (typeof apiResponseObject !== 'undefined') && (apiResponseObject.error) ) {
         console.log("API error: " + apiResponseObject.error.message);
         apiResponseCallback(new Error(apiResponseObject.error.message));
       } else {
