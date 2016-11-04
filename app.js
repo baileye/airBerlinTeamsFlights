@@ -36,19 +36,33 @@ server.get("/", function(req, res, next) {
 // API Info
 //=========================================================
 var apiToken = process.env.APITOKEN;
-//var apiEndpoint = "https://xap.ix-io.net/api/v1/airberlin_lab_2016/available_combinations";
 
-
+// INTENTS
+var model = process.env.LUISMODEL 
+var recognizer = new builder.LuisRecognizer(model);
+var intents = new builder.IntentDialog({ recognizers: [recognizer] });
+intents.matches('/trip', '/routeQuery');
+intents.matches('/help', '/help');
+intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
 //=========================================================
 // Bots Dialogs
 //=========================================================
 
-bot.dialog("/", [
-  function (session, args, next) {
-    console.log('start session');
-    session.send("Hi, I'm the Air Berlin Flight query bot. I can help you find flights with Air Berlin. Right now I only understand airport codes, e.g. 'LON' or 'PAR'.");
-    session.beginDialog("/routeQuery");
+bot.dialog("/", intents);
+
+// bot.dialog("/", [
+//   function (session, args, next) {
+//     console.log('start session');
+//     session.send("Hi, I'm the Air Berlin Flight query bot. I can help you find flights with Air Berlin. Right now I only understand airport codes, e.g. 'LON' or 'PAR'.");
+//     session.beginDialog("/routeQuery");
+//   }
+// ]);
+
+bot.dialog("/help", [
+  function (session) {
+    session.send("To start a flight search you can either use the direct command '/trip', or ask me to 'help plan a trip'");
+    session.send("You can call up this help at any time by typing /help");
   }
 ]);
 
@@ -73,12 +87,6 @@ bot.dialog("/routeQuery", [
     });
   }
 ]);
-
-// bot.dialog("/commands", [
-//   function(session) {
-//     builder.Prompts.choice(session, "Here are the commands you can send me:", [])
-//   }
-// ]);
 
 function queryAPI(origin, destination, apiResponseCallback) {
   var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D=" + destination;
