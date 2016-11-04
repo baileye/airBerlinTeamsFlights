@@ -90,7 +90,8 @@ function queryAPI(origin, destination, apiResponseCallback) {
   };
 
   
-  // http.get(options, function (res) {
+  http.get(options, function (res) {
+  });
   //   var apiResponseString = '';
   //   console.log('Status Code: ' + res.statusCode);
   //   if (res.statusCode != 200) {
