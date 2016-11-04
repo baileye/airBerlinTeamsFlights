@@ -42,7 +42,7 @@ var model = process.env.LUISMODEL
 var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
 intents.matches(/^trip/i, '/routeQuery');
-intents.matches(/^help/i, '/help');
+// intents.matches(/^help/i, '/help');
 intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
 intents.matches('flightquery', '/routeQuery');
