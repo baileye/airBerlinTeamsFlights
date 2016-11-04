@@ -41,8 +41,8 @@ var apiToken = process.env.APITOKEN;
 var model = process.env.LUISMODEL 
 var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
-intents.matches('/trip', '/routeQuery');
-intents.matches('/help', '/help');
+intents.matches('\trip', '/routeQuery');
+intents.matches('\help', '/help');
 intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
 //=========================================================
@@ -61,8 +61,8 @@ bot.dialog("/", intents);
 
 bot.dialog("/help", [
   function (session) {
-    session.send("To start a flight search you can either use the direct command '/trip', or ask me to 'help plan a trip'");
-    session.send("You can call up this help at any time by typing /help");
+    session.send("To start a flight search you can either use the direct command '\trip', or ask me to 'help plan a trip'");
+    session.send("You can call up this help at any time by typing \help");
   }
 ]);
 
