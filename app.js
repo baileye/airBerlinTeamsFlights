@@ -42,7 +42,7 @@ var model = process.env.LUISMODEL
 var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
 intents.matches(/^trip/i, '/routeQuery');
-// intents.matches(/^help/i, '/help');
+intents.matches(/^help/i, '/help');
 intents.onDefault('/help');
 
 intents.matches('flightquery', '/routeQuery');
@@ -102,27 +102,28 @@ function queryAPI(origin, destination, apiResponseCallback) {
     //console.log(res);
     if (res.statusCode != 200) {
       apiResponseCallback(new Error("Non 200 Response"));
+    } else {
+
+      res.on('data', function (data) {
+        apiResponseString += data;
+      });
+
+      res.on('end', function () {
+        var apiResponseObject;
+        try {
+          apiResponseObject = JSON.parse(apiResponseString);
+        } catch (e) {
+          // apiResponseCallback('JSON parsing error');
+        }
+
+        if ( (typeof apiResponseObject !== 'undefined') && (apiResponseObject.error) ) {
+          console.log("API error: " + apiResponseObject.error.message);
+          apiResponseCallback(new Error(apiResponseObject.error.message));
+        } else {
+          apiResponseCallback(null, apiResponseObject);
+        }
+      });
     }
-
-    res.on('data', function (data) {
-      apiResponseString += data;
-    });
-
-    res.on('end', function () {
-      var apiResponseObject;
-      try {
-        apiResponseObject = JSON.parse(apiResponseString);
-      } catch (e) {
-        // apiResponseCallback('JSON parsing error');
-      }
-
-      if ( (typeof apiResponseObject !== 'undefined') && (apiResponseObject.error) ) {
-        console.log("API error: " + apiResponseObject.error.message);
-        apiResponseCallback(new Error(apiResponseObject.error.message));
-      } else {
-        apiResponseCallback(null, apiResponseObject);
-      }
-    });
   }).on('error', function (e) {
     console.log("Communications error: " + e.message);
     apiResponseCallback(new Error(e.message));
