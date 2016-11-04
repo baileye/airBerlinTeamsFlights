@@ -90,29 +90,31 @@ function queryAPI(origin, destination, apiResponseCallback) {
   };
 
   
-  http.get(options, function (res) {
-    var apiResponseString = '';
-    console.log('Status Code: ' + res.statusCode);
-    if (res.statusCode != 200) {
-      apiResponseCallback(new Error("Non 200 Response"));
-    }
+  // http.get(options, function (res) {
+  //   var apiResponseString = '';
+  //   console.log('Status Code: ' + res.statusCode);
+  //   if (res.statusCode != 200) {
+  //     apiResponseCallback(new Error("Non 200 Response"));
+  //   }
 
-    res.on('data', function (data) {
-      apiResponseString += data;
-    });
+  //   res.on('data', function (data) {
+  //     apiResponseString += data;
+  //   });
 
-    res.on('end', function () {
-      var apiResponseObject = JSON.parse(apiResponseString);
+  //   res.on('end', function () {
+  //     var apiResponseObject = JSON.parse(apiResponseString);
 
-      if (apiResponseObject.error) {
-        console.log("API error: " + apiResponseObj.error.message);
-        apiResponseCallback(new Error(apiResponseObj.error.message));
-      } else {
-        apiResponseCallback(null, apiResponseObject);
-      }
-    });
-  }).on('error', function (e) {
-    console.log("Communications error: " + e.message);
-    apiResponseCallback(new Error(e.message));
-  });
+  //     if (apiResponseObject.error) {
+  //       console.log("API error: " + apiResponseObject.error.message);
+  //       apiResponseCallback(new Error(apiResponseObject.error.message));
+  //     } else {
+  //       apiResponseCallback(null, apiResponseObject);
+  //     }
+  //   });
+  // }).on('error', function (e) {
+  //   console.log("Communications error: " + e.message);
+  //   apiResponseCallback(new Error(e.message));
+  // });
+
+  apiResponseCallback(null, null);
 }
