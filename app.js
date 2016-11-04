@@ -61,10 +61,10 @@ bot.dialog("/routeQuery", [
   function (session, results) {
     session.dialogData.destination = results.response;
     session.send("Looking up flights from " + session.dialogData.start + " to " + session.dialogData.destination + "for you now...");
-    queryAPI(session.dialogData.destination, session.dialogData.destination, function(err, res) {
+    // queryAPI(session.dialogData.destination, session.dialogData.destination, function(err, res) {
       session.send("Results will be here");
       session.endDialog();
-    })
+    // })
   }
 ]);
 
