@@ -55,16 +55,16 @@ bot.dialog("/routeQuery", [
     builder.Prompts.choice(session, "What city are you starting your journey in?", ["LHR", "AAL"]);
   },
   function (session, results) {
-    session.dialogData.start = results.response;
+    session.dialogData.origin = results.response;
     builder.Prompts.choice(session, "Where would you like to fly to?", ["LHR", "AAL"]);
   },
   function (session, results) {
     session.dialogData.destination = results.response;
-    session.send("Looking up flights from " + session.dialogData.start.entity + " to " + session.dialogData.destination.entity + "for you now...");
-    // queryAPI(session.dialogData.start.entity, session.dialogData.destination.entity, function(err, res) {
+    session.send("Looking up flights from " + session.dialogData.origin.entity + " to " + session.dialogData.destination.entity + " for you now...");
+    queryAPI(session.dialogData.origin.entity, session.dialogData.destination.entity, function(err, res) {
       session.send("Results will be here");
       session.endDialog();
-    // })
+    })
   }
 ]);
 
@@ -74,8 +74,12 @@ bot.dialog("/routeQuery", [
 //   }
 // ]);
 
+// API QUERY
+// SAMPLE: https://xap.ix-io.net/api/v1/airberlin_lab_2016/available_combinations?filter%5Bdeparture%5D=LHR&filter%5Bdestination%5D=AAL&fields%5Bavailable_combinations%5D=destination%2Cdeparture%2Crandom_id%2Creturn_flight_info_0_flight_id%2Creturn_flight_info_0_last_seats%2Creturn_flight_info_1_requested_count%2Creturn_flight_info_1_passenger_type%2Creturn_flight_info_2_currency%2Creturn_flight_info_2_total%2Conward_flight_info_0_flight_id%2Conward_flight_info_0_last_seats%2Conward_flight_info_1_requested_count%2Conward_flight_info_1_passenger_type%2Conward_flight_info_2_currency%2Conward_flight_info_2_total&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100
+
+
 function queryAPI(origin, destination, apiResponseCallback) {
-  var params = "";
+  var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D="+destination;
   var options = {
     host: 'xap.ix-io.net',
     path: '/api/v1/airberlin_lab_2016/available_combinations'+params,
