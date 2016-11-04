@@ -46,6 +46,7 @@ var apiToken = process.env.APITOKEN;
 
 bot.dialog("/", [
   function (session, args, next) {
+    console.log('start session');
     session.beginDialog("/routeQuery");
   }
 ]);
@@ -91,12 +92,11 @@ function queryAPI(origin, destination, apiResponseCallback) {
 
   
   http.get(options, function (res) {
-  });
-  //   var apiResponseString = '';
-  //   console.log('Status Code: ' + res.statusCode);
-  //   if (res.statusCode != 200) {
-  //     apiResponseCallback(new Error("Non 200 Response"));
-  //   }
+    var apiResponseString = '';
+    console.log('Status Code: ' + res.statusCode);
+    if (res.statusCode != 200) {
+      apiResponseCallback(new Error("Non 200 Response"));
+    }
 
   //   res.on('data', function (data) {
   //     apiResponseString += data;
@@ -115,7 +115,7 @@ function queryAPI(origin, destination, apiResponseCallback) {
   // }).on('error', function (e) {
   //   console.log("Communications error: " + e.message);
   //   apiResponseCallback(new Error(e.message));
-  // });
+  });
 
   apiResponseCallback(null, null);
 }
