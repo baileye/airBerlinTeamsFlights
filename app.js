@@ -84,9 +84,10 @@ function queryAPI(origin, destination, apiResponseCallback) {
   var options = {
     host: 'xap.ix-io.net',
     path: '/api/v1/airberlin_lab_2016/available_combinations'+params,
-    auth: apiToken,
+    // auth: apiToken,
     headers: {
-      "Accept": "application/json"
+      "Accept": "application/json",
+      "Authorization": apiToken
     }
   };
 
