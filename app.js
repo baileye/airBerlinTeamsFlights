@@ -56,7 +56,6 @@ bot.dialog("/", intents);
 bot.dialog("/help", [
   function (session) {
     session.send("To start a flight search you can either use the direct command 'trip', or ask me to 'start planing a trip'");
-    session.send("You can call up this help at any time by typing 'help'");
   }
 ]);
 
