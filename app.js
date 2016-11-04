@@ -42,7 +42,7 @@ var model = process.env.LUISMODEL
 var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
 intents.matches(/^trip/i, '/routeQuery');
-intents.matches('help', '/help');
+intents.matches(/^help/i, '/help');
 intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
 intents.matches('flightquery', '/routeQuery');
@@ -70,8 +70,8 @@ bot.dialog("/routeQuery", [
   },
   function (session, results) {
     session.dialogData.destination = results.response;
-    session.send("Looking up flights from " + session.dialogData.origin.entity + " to " + session.dialogData.destination.entity + " for you now...");
-    queryAPI(session.dialogData.origin.entity, session.dialogData.destination.entity, function(err, res) {
+    session.send("Looking up flights from " + session.dialogData.origin + " to " + session.dialogData.destination + " for you now...");
+    queryAPI(session.dialogData.origin, session.dialogData.destination, function(err, res) {
       if (err) {
         session.send("Woops, something went wrong. How about you try again?");
       } else {
