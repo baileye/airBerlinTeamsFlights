@@ -1,5 +1,6 @@
 var restify = require('restify');
 var builder = require('botbuilder');
+var http = require('http');
 
 //=========================================================
 // Bot Setup
@@ -31,6 +32,12 @@ server.get("/", function(req, res, next) {
   next();
 });
 
+//=========================================================
+// API Info
+//=========================================================
+var apiToken = process.env.APITOKEN;
+//var apiEndpoint = "https://xap.ix-io.net/api/v1/airberlin_lab_2016/available_combinations";
+
 
 
 //=========================================================
@@ -45,33 +52,19 @@ bot.dialog("/", [
 
 bot.dialog("/routeQuery", [
   function (session) {
-    builder.Prompts.choice(session, "Are you feeling unwell today?", ["Yes", "No"]);
+    builder.Prompts.choice(session, "What city are you starting your journey in?", ["LHR", "AAL"]);
   },
   function (session, results) {
-    session.dialogData.feelingSick = results.response;
-    if (session.dialogData.feelingSick.entity == "Yes") {
-      // sick
-      builder.Prompts.choice(session, "Is your head or neck sore?", ["Yes", "No"]);
-    } else {
-      // not sick
-      builder.Prompts.choice(session, "Did you exercise hard yesterday?", ["Yes", "No"]);
-    }
+    session.dialogData.start = results.response;
+    builder.Prompts.choice(session, "Where would you like to fly to?", ["LHR", "AAL"]);
   },
   function (session, results) {
-    if (session.dialogData.feelingSick.entity == "Yes") {
-      if (results.response.entity == "Yes") {
-        session.send("I don't think you should run today. If you're not feeling well for a few days I can delay your next order by a week?");
-      } else {
-        session.send("Go for a gentle run today. Make a Nut-late with the Bonk-Cup after you stretch.");
-      }
-    } else {
-      if (results.response.entity == "Yes") {
-        session.send("Go for a moderate run today. I think the Mid-Cup from your last order will really help your recovery.");
-      } else {
-        session.send("Go for a normal run today and eat the Super-Cup from your last order during your run.");
-      }
-    }
-    session.endDialog();
+    session.dialogData.destination = results.response;
+    session.send("Looking up flights from " + session.dialogData.start + " to " + session.dialogData.destination + "for you now...");
+    queryAPI(session.dialogData.destination, session.dialogData.destination, function(err, res) {
+      session.send("Results will be here");
+      session.endDialog();
+    })
   }
 ]);
 
@@ -80,3 +73,42 @@ bot.dialog("/routeQuery", [
 //     builder.Prompts.choice(session, "Here are the commands you can send me:", [])
 //   }
 // ]);
+
+function queryAPI(origin, destination, apiResponseCallback) {
+  var params = "";
+  var options = {
+    host: 'xap.ix-io.net',
+    path: '/api/v1/airberlin_lab_2016/available_combinations'+params,
+    auth: apiToken,
+    headers: {
+      "Accept": "application/json"
+    }
+  };
+
+  
+  http.get(options, function (res) {
+    var apiResponseString = '';
+    console.log('Status Code: ' + res.statusCode);
+    if (res.statusCode != 200) {
+      apiResponseCallback(new Error("Non 200 Response"));
+    }
+
+    res.on('data', function (data) {
+      apiResponseString += data;
+    });
+
+    res.on('end', function () {
+      var apiResponseObject = JSON.parse(apiResponseString);
+
+      if (apiResponseObject.error) {
+        console.log("API error: " + apiResponseObj.error.message);
+        apiResponseCallback(new Error(apiResponseObj.error.message));
+      } else {
+        apiResponseCallback(null, apiResponseObject);
+      }
+    });
+  }).on('error', function (e) {
+    console.log("Communications error: " + e.message);
+    apiResponseCallback(new Error(e.message));
+  });
+}
