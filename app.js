@@ -63,7 +63,11 @@ bot.dialog("/routeQuery", [
     session.dialogData.destination = results.response;
     session.send("Looking up flights from " + session.dialogData.origin.entity + " to " + session.dialogData.destination.entity + " for you now...");
     queryAPI(session.dialogData.origin.entity, session.dialogData.destination.entity, function(err, res) {
-      session.send("Results will be here");
+      if (err) {
+        session.send("Woops, something went wrong. How about you try again?");
+      } else {
+        session.send("Results will be here");
+      }
       session.endDialog();
     });
   }
@@ -117,9 +121,9 @@ function queryAPI(origin, destination, apiResponseCallback) {
   //       apiResponseCallback(null, apiResponseObject);
   //     }
   //   });
-  // }).on('error', function (e) {
-  //   console.log("Communications error: " + e.message);
-  //   apiResponseCallback(new Error(e.message));
+  }).on('error', function (e) {
+    console.log("Communications error: " + e.message);
+    apiResponseCallback(new Error(e.message));
   });
 
   apiResponseCallback(null, null);
