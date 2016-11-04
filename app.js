@@ -1,6 +1,6 @@
 var restify = require('restify');
 var builder = require('botbuilder');
-var http = require('http');
+var https = require('https');
 
 //=========================================================
 // Bot Setup
@@ -95,7 +95,7 @@ function queryAPI(origin, destination, apiResponseCallback) {
     }
   };
 
-  http.get(options, function (res) {
+  https.get(options, function (res) {
     var apiResponseString = '';
     console.log('Status Code: ' + res.statusCode);
     console.log(res);
