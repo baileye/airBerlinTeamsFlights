@@ -1,0 +1,15 @@
+{
+  "name": "air berlin flight query",
+  "version": "1.0.0",
+  "description": "Air Berlin route and flight checking app.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eoin Bailey",
+  "license": "MIT",
+  "dependencies": {
+    "botbuilder": "^3.3.3",
+    "restify": "^4.1.1"
+  }
+}
