@@ -80,6 +80,7 @@ bot.dialog("/routeQuery", [
       console.log(res);
       if (err) {
         session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
+        session.endDialog();
       } else {
         session.dialogData.flightDate = res.availabilities[0].next_outbound_flight_date;
         session.dialogData.flightPrice = res.combinations[0].onward_flight_info.passenger_pricing.pricing["@total"]
