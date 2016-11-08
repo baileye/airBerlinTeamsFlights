@@ -166,10 +166,8 @@ bot.dialog("/routeQuery", [
                 ])
                 .tax("€" + session.dialogData.flightTaxPrice)
                 .total("€" + session.dialogData.flightPrice)
-        ]);
+    ]);
     session.send(msg);
-    // session.send("You're booked on the " + session.dialogData.flightDate + " from " + session.dialogData.origin + " to " + session.dialogData.destination);
-    // session.send("I'm sending you the confirmation email with details now. Thanks " + session.dialogData.fullName);
     session.endDialog();
   }
 ]);
