@@ -113,12 +113,13 @@ bot.dialog("/routeQuery", [
               builder.CardAction.imBack(session, "New Search", "New Search")
           ]);
       var msg = new builder.Message(session).attachments([card]);
+      builder.Prompts.choice(session, msg, ['Book', 'New Search']);
       session.send(msg);
     });
   },
   function (session, results) {
     console.log(results.response);
-    if (results.response == "Book") {
+    if (results.response.entity == "Book") {
       session.send("Great! I'll need some information from you to make the booking.");
       builder.Prompts.text(session, "What's your full name?");
     } else {
