@@ -76,7 +76,7 @@ bot.dialog("/routeQuery", [
     session.dialogData.destination = results.response;
     session.send("Looking up flights from " + session.dialogData.origin + " to " + session.dialogData.destination + " for you now...");
     session.sendTyping();
-    queryAPI(session.dialogData.origin, session.dialogData.destination, function(err, res) {
+    availabitiesQuery(session.dialogData.origin, session.dialogData.destination, function(err, res) {
       console.log(res);
       if (err) {
         session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
@@ -88,12 +88,17 @@ bot.dialog("/routeQuery", [
   }
 ]);
 
-function queryAPI(origin, destination, apiResponseCallback) {
+function availabitiesQuery(origin, destination, apiResponseCallback) {
+  var query = 'availabilities';
   var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D=" + destination;
-  params += "&fields%5Bavailabilities%5D=destination%2Cdeparture%2Crandom_id%2Cprevious_outbound_flight_date%2Cnext_outbound_flight_date&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100";
+  params += "&fields%5Bavailabilities%5D=destination%2Cdeparture%2Crandom_id%2Cprevious_outbound_flight_date%2Cnext_outbound_flight_date&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100&include=combinations";
+  queryAPI(query+params, apiResponseCallback);
+}
+
+function queryAPI(endpoint, apiResponseCallback) {
   var options = {
     host: 'xap.ix-io.net',
-    path: '/api/v1/airberlin_lab_2016/availabilities'+params,
+    path: '/api/v1/airberlin_lab_2016/'+endpoint,
     // auth: apiToken,
     headers: {
       "Accept": "application/json",
