@@ -81,10 +81,35 @@ bot.dialog("/routeQuery", [
       if (err) {
         session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
       } else {
-        session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + " next Thursday! Book on the Air Berlin website!");
+        session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + " on " +res.availabilities[0].next_outbound_flight_date);
+        session.send("The cost of the flight is €" + res.combinations[0].onward_flight_info.passenger_pricing.pricing["@total"]);
+        session.dialogData.flightId = s;
+        builder.Prompts.choice(session, "Would you like to book this flight?", ["Book", "No"]);
       }
-      session.endDialog();
     });
+  },
+  function (session, results) {
+    if (results.response.entity == "Book") {
+      session.send("Great! I'll need some information from you to make the booking.");
+      builder.Prompts.text(session, "What's your full name?");
+    } else {
+      session.send("I hope I helped. If you need anymore help finding a flight just ask me!");
+      session.endDialog();
+    }
+  },
+  function (session, results) {
+    session.dialogData.fullName = results.response;
+    // TODO: Lookup credit card details of user, for now pretend they're already set up
+    session.send("Welcome back " + session.dialogData.fullName + ", I've found your information.");
+    builder.Prompts.choice(session, "Are you still living at 123 Fake Street?", ["Yes", "No"]); 
+  },
+  function(session, results) {
+    if (results.response.entity == "No") {
+      session.send("Good job on testing this path -- this will ask the user to enter their information and be saved.");
+      session.send("For now I'm going to pretend you are " + session.dialogData.fullName + " who lives at 123 Fake Street.");
+    }
+    session.send("Great! Would you like to use your credit card on file for the booking?");
+    session.endDialog();
   }
 ]);
 
