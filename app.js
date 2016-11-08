@@ -112,7 +112,7 @@ bot.dialog("/routeQuery", [
               builder.CardAction.imBack(session, "Book", "Book"),
               builder.CardAction.imBack(session, "New Search", "New Search")
           ]);
-      var msg = new builder.Message(session).attachments([card]);
+      // var msg = new builder.Message(session).attachments([card]);
       builder.Prompts.choice(session, msg, ['Book', 'New Search']);
       session.send(msg);
     });
