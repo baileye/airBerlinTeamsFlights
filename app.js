@@ -89,6 +89,7 @@ bot.dialog("/routeQuery", [
         session.dialogData.flightFuelPrice = "0.00";
         session.dialogData.flightTaxPrice = "52.80";
         session.dialogData.flightPlanePrice = "95.00";
+        // END TEST DATA
       } else {
         session.dialogData.flightDate = res.availabilities[0].next_outbound_flight_date;
         session.dialogData.flightPrice = res.combinations[0].onward_flight_info.passenger_pricing.pricing["@total"];
@@ -105,8 +106,8 @@ bot.dialog("/routeQuery", [
                 builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/d/d4/Logo_Air_Berlin_mit_Claim.jpg")
           ])
           .buttons([
-              builder.CardAction.imBack(session, "book", "Book"),
-              builder.CardAction.imBack(session, "new", "New Search")
+              builder.CardAction.imBack(session, "Book", "Book"),
+              builder.CardAction.imBack(session, "New Search", "New Search")
           ]);
       var msg = new builder.Message(session).attachments([card]);
       session.send(msg);
@@ -116,9 +117,6 @@ bot.dialog("/routeQuery", [
     if (results.response.entity == "Book") {
       session.send("Great! I'll need some information from you to make the booking.");
       builder.Prompts.text(session, "What's your full name?");
-    } else if (results.response.entity == "end") {
-      session.send("I hope I helped. If you need anymore help finding a flight just ask me!");
-      session.endDialog();
     } else {
       session.beginDialog('routeQuery');
     }
