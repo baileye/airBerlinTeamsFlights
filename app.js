@@ -79,7 +79,7 @@ bot.dialog("/routeQuery", [
     availabitiesQuery(session.dialogData.origin, session.dialogData.destination, function(err, res) {
       console.log(res);
       if (err) {
-        session.send("Woops, I'm having trouble finding that information for you. Let's try again later!");
+        session.send("Woops, I'm having trouble finding that information for you. Ask me again shortly!");
         session.endDialog();
       } else {
         session.dialogData.flightDate = res.availabilities[0].next_outbound_flight_date;
