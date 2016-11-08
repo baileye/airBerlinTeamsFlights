@@ -114,7 +114,6 @@ bot.dialog("/routeQuery", [
           ]);
       var msg = new builder.Message(session).attachments([card]);
       builder.Prompts.choice(session, msg, ['Book', 'New Search']);
-      // session.send(msg);
     });
   },
   function (session, results) {
@@ -129,8 +128,16 @@ bot.dialog("/routeQuery", [
   function (session, results) {
     session.dialogData.fullName = results.response;
     // TODO: Lookup credit card details of user, for now pretend they're already set up
-    session.send("Welcome back " + session.dialogData.fullName + ", I've found your information.");
-    builder.Prompts.choice(session, "Are you still living at 123 Fake Street?", ["Yes", "No"]); 
+    var card = new builder.HeroCard(session)
+        .title(session.dialogData.fullName)
+        .subtitle("123 Fake St, London, UK")
+        .text("XXXX XXXX XXXX 1234  -  Exp: 12/18")
+        .buttons([
+            builder.CardAction.imBack(session, "Yes", "That's me!"),
+            builder.CardAction.imBack(session, "No", "Not correct")
+    ]);
+    var msg = new builder.Message(session).attachments([card]);
+    builder.Prompts.choice(session, msg, ['Yes', 'No']);      
   },
   function(session, results) {
     if (results.response.entity == "No") {
@@ -143,7 +150,7 @@ bot.dialog("/routeQuery", [
     var msg = new builder.Message(session)
         .attachments([
             new builder.ReceiptCard(session)
-                .title("Recipient's Name")
+                .title(session.dialogData.origin + " -> " + session.dialogData.destination)
                 .items([
                     builder.ReceiptItem.create(session, "€" + session.dialogData.flightFuelPrice, "Fuel Charge"),
                     builder.ReceiptItem.create(session, "€" + session.dialogData.flightPlanePrice, "Flight")
