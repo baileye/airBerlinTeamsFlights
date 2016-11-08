@@ -159,7 +159,7 @@ bot.dialog("/routeQuery", [
                 .facts([
                     builder.Fact.create(session, session.dialogData.fullName, "Name"),
                     builder.Fact.create(session, session.dialogData.flightDate, "Flight Date"),
-                    builder.Fact.create(session, "1234567898", "Order Number"),                  
+                    // builder.Fact.create(session, "1234567898", "Order Number"),                  
                     builder.Fact.create(session, "1234567898", "Order Number"),
                     builder.Fact.create(session, "VISA 4076", "Payment Method"),
                     builder.Fact.create(session, "E-Mail", "Delivery Method")
