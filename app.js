@@ -95,6 +95,11 @@ bot.dialog("/routeQuery", [
             .text("€" + session.dialogData.flightPrice)
             .images([
                  builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/d/d4/Logo_Air_Berlin_mit_Claim.jpg")
+            ])
+            .buttons([
+                builder.CardAction.imBack(session, "Book", "Book"),
+                builder.CardAction.imBack(session, "New Search", "new"),
+                builder.CardAction.imBack(session, "Exit", "end")
             ]);
         var msg = new builder.Message(session).attachments([card]);
         session.send(msg);
@@ -102,7 +107,7 @@ bot.dialog("/routeQuery", [
         // session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + " on " + session.dialogData.flightDate);
         // session.send("The cost of the flight is €" + session.dialogData.flightPrice);
         // session.dialogData.flightId = s; // TODO: Save the flight IDs
-        builder.Prompts.choice(session, "Would you like to book this flight?", ["Book", "No"]);
+        // builder.Prompts.choice(session, "Would you like to book this flight?", ["Book", "No"]);
       }
     });
   },
@@ -110,9 +115,11 @@ bot.dialog("/routeQuery", [
     if (results.response.entity == "Book") {
       session.send("Great! I'll need some information from you to make the booking.");
       builder.Prompts.text(session, "What's your full name?");
-    } else {
+    } else if (results.response.entity == "end") {
       session.send("I hope I helped. If you need anymore help finding a flight just ask me!");
       session.endDialog();
+    } else {
+      session.beginDialog('routeQuery');
     }
   },
   function (session, results) {
@@ -128,6 +135,24 @@ bot.dialog("/routeQuery", [
     }
     session.send("Great! I'll use your credit card on file for the booking.");
     session.sendTyping();
+    // Send a receipt
+    var msg = new builder.Message(session)
+        .attachments([
+            new builder.ReceiptCard(session)
+                .title("Recipient's Name")
+                .items([
+                    builder.ReceiptItem.create(session, "€" + session.dialogData.flightFuelPrice, "Fuel Charge"),
+                    builder.ReceiptItem.create(session, "€" + session.dialogData.flightPlanePrice, "Flight")
+                ])
+                .facts([
+                    builder.Fact.create(session, "1234567898", "Order Number"),
+                    builder.Fact.create(session, "VISA 4076", "Payment Method"),
+                    builder.Fact.create(session, "E-Mail", "Delivery Method")
+                ])
+                .tax("€" + session.dialogData.flightTaxPrice)
+                .total("€" + session.dialogData.flightPrice)
+        ]);
+    session.send(msg);
     session.send("You're booked on the " + session.dialogData.flightDate + " from " + session.dialogData.origin + " to " + session.dialogData.destination);
     session.send("I'm sending you the confirmation email with details now. Thanks " + session.dialogData.fullName);
     session.endDialog();
