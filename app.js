@@ -81,6 +81,14 @@ bot.dialog("/routeQuery", [
       if (err) {
         session.send("Woops, I'm having trouble finding that information for you. Ask me again shortly!");
         session.endDialog();
+
+        // API is having issues, so adding in test data
+        session.dialogData.flightDate = "2016-11-28";
+        session.dialogData.flightPrice = "147.80";
+
+        session.dialogData.flightFuelPrice = "0.00";
+        session.dialogData.flightTaxPrice = "52.80";
+        session.dialogData.flightPlanePrice = "95.00";
       } else {
         session.dialogData.flightDate = res.availabilities[0].next_outbound_flight_date;
         session.dialogData.flightPrice = res.combinations[0].onward_flight_info.passenger_pricing.pricing["@total"];
@@ -88,21 +96,21 @@ bot.dialog("/routeQuery", [
         session.dialogData.flightFuelPrice = res.combinations[0].onward_flight_info.passenger_pricing.pricing.fare_detail[0]['@amount'];
         session.dialogData.flightTaxPrice = res.combinations[0].onward_flight_info.passenger_pricing.pricing.fare_detail[2]['@amount'];
         session.dialogData.flightPlanePrice = res.combinations[0].onward_flight_info.passenger_pricing.pricing.fare_detail[1]['@amount'];
-
-        var card = new builder.HeroCard(session)
-            .title(session.dialogData.origin + " -> " + session.dialogData.destination)
-            .subtitle(session.dialogData.flightDate)
-            .text("€" + session.dialogData.flightPrice)
-            .images([
-                 builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/d/d4/Logo_Air_Berlin_mit_Claim.jpg")
-            ])
-            .buttons([
-                builder.CardAction.imBack(session, "Book", "Book"),
-                builder.CardAction.imBack(session, "New Search", "new"),
-                builder.CardAction.imBack(session, "Exit", "end")
-            ]);
-        var msg = new builder.Message(session).attachments([card]);
-        session.send(msg);
+      }
+      var card = new builder.HeroCard(session)
+          .title(session.dialogData.origin + " -> " + session.dialogData.destination)
+          .subtitle(session.dialogData.flightDate)
+          .text("€" + session.dialogData.flightPrice)
+          .images([
+                builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/d/d4/Logo_Air_Berlin_mit_Claim.jpg")
+          ])
+          .buttons([
+              builder.CardAction.imBack(session, "Book", "Book"),
+              builder.CardAction.imBack(session, "New Search", "new"),
+              builder.CardAction.imBack(session, "Exit", "end")
+          ]);
+      var msg = new builder.Message(session).attachments([card]);
+      session.send(msg);
 
         // session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + " on " + session.dialogData.flightDate);
         // session.send("The cost of the flight is €" + session.dialogData.flightPrice);
