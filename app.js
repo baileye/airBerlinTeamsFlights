@@ -79,7 +79,7 @@ bot.dialog("/routeQuery", [
     availabitiesQuery(session.dialogData.origin, session.dialogData.destination, function(err, res) {
       console.log(res);
       if (err) {
-        session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
+        session.send("Woops, I'm having trouble finding that information for you. Let's try again later!");
         session.endDialog();
       } else {
         session.dialogData.flightDate = res.availabilities[0].next_outbound_flight_date;
@@ -113,7 +113,7 @@ bot.dialog("/routeQuery", [
     }
     session.send("Great! I'll use your credit card on file for the booking.");
     session.sendTyping();
-    session.send("You're booked on the " + session.dialogData.flightDate + " from " + session.DialogData.origin + " to " + session.dialogData.destination);
+    session.send("You're booked on the " + session.dialogData.flightDate + " from " + session.dialogData.origin + " to " + session.dialogData.destination);
     session.send("I'm sending you the confirmation email with details now. Thanks " + session.dialogData.fullName);
     session.endDialog();
   }
