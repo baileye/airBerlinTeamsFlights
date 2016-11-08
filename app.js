@@ -77,7 +77,7 @@ bot.dialog("/routeQuery", [
   },
   function (session, results) {
     session.dialogData.destination = results.response;
-    session.send("Looking up flights from " + session.dialogData.origin + " to " + session.dialogData.destination + " for you now...");
+    session.send("Looking up flights from " + session.dialogData.origin + " to " + session.dialogData.destination + " for you now");
     session.sendTyping();
     availabitiesQuery(session.dialogData.origin, session.dialogData.destination, function(err, res) {
       console.log(res);
@@ -134,14 +134,14 @@ bot.dialog("/routeQuery", [
         .subtitle("123 Fake St, London, UK")
         .text("XXXX XXXX XXXX 1234  -  Exp: 12/18")
         .buttons([
-            builder.CardAction.imBack(session, "Yes", "That's me!"),
-            builder.CardAction.imBack(session, "No", "Not correct")
+            builder.CardAction.imBack(session, "That's me!", "That's me!"),
+            builder.CardAction.imBack(session, "Not correct", "Not correct")
     ]);
     var msg = new builder.Message(session).attachments([card]);
-    builder.Prompts.choice(session, msg, ['Yes', 'No']);      
+    builder.Prompts.choice(session, msg, ["That's me", "Not correct"]);      
   },
   function(session, results) {
-    if (results.response.entity == "No") {
+    if (results.response.entity == "Not correct") {
       session.send("Good job on testing this path -- this will ask the user to enter their information and be saved.");
       session.send("For now I'm going to pretend you are " + session.dialogData.fullName + " who lives at 123 Fake Street.");
     }
@@ -151,7 +151,7 @@ bot.dialog("/routeQuery", [
     var msg = new builder.Message(session)
         .attachments([
             new builder.ReceiptCard(session)
-                .title(session.dialogData.origin + " -> " + session.dialogData.destination)
+                .title("Booked: " + session.dialogData.origin + " -> " + session.dialogData.destination)
                 .items([
                     builder.ReceiptItem.create(session, "€" + session.dialogData.flightFuelPrice, "Fuel Charge"),
                     builder.ReceiptItem.create(session, "€" + session.dialogData.flightPlanePrice, "Flight")
