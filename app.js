@@ -91,7 +91,7 @@ bot.dialog("/routeQuery", [
 function availabitiesQuery(origin, destination, apiResponseCallback) {
   var query = 'availabilities';
   var params = "?filter%5Bdeparture%5D=" + origin + "&filter%5Bdestination%5D=" + destination;
-  params += "&fields%5Bavailabilities%5D=destination%2Cdeparture%2Crandom_id%2Cprevious_outbound_flight_date%2Cnext_outbound_flight_date&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100&include=combinations";
+  params += "&fields%5Bavailabilities%5D=destination%2Cdeparture%2Crandom_id%2Cprevious_outbound_flight_date%2Cnext_outbound_flight_date&include=combinations&sort=random_id&page%5Bnumber%5D=1&page%5Bsize%5D=100";
   queryAPI(query+params, apiResponseCallback);
 }
 
