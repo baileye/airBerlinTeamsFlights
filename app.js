@@ -116,7 +116,6 @@ bot.dialog("/routeQuery", [
         // session.send("The cost of the flight is €" + session.dialogData.flightPrice);
         // session.dialogData.flightId = s; // TODO: Save the flight IDs
         // builder.Prompts.choice(session, "Would you like to book this flight?", ["Book", "No"]);
-      }
     });
   },
   function (session, results) {
