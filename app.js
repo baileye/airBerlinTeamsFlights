@@ -48,6 +48,7 @@ intents.matches(/trip/i, '/routeQuery');
 intents.matches(/flight/i, '/routeQuery');
 intents.matches(/holiday/i, '/routeQuery');
 intents.matches(/^help/i, '/help');
+intents.matches(/who/i, '/who');
 intents.onDefault('/help');
 
 intents.matches('flightquery', '/routeQuery');
@@ -55,6 +56,13 @@ intents.matches('flightquery', '/routeQuery');
 //=========================================================
 // Bots Dialogs
 //=========================================================
+
+bot.dialog("/who", [
+  function (session, args) {
+    session.send("I am the Air Berlin flight booking bot. I can look up flights for you, and help you make the booking.");
+    session.endDialog();
+  }
+]);
 
 bot.dialog("/", intents);
 
