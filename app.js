@@ -32,6 +32,9 @@ server.get("/", function(req, res, next) {
   next();
 });
 
+// Universal Actions
+bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^goodbye/i });
+
 //=========================================================
 // API Info
 //=========================================================
