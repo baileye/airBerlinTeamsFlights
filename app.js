@@ -81,9 +81,11 @@ bot.dialog("/routeQuery", [
       if (err) {
         session.send("Woops, the Air Berlin API isn't happy right now. Let's try again later!");
       } else {
-        session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + " on " +res.availabilities[0].next_outbound_flight_date);
-        session.send("The cost of the flight is €" + res.combinations[0].onward_flight_info.passenger_pricing.pricing["@total"]);
-        session.dialogData.flightId = s;
+        session.dialogData.flightDate = res.availabilities[0].next_outbound_flight_date;
+        session.dialogData.flightPrice = res.combinations[0].onward_flight_info.passenger_pricing.pricing["@total"]
+        session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + " on " + session.dialogData.flightDate);
+        session.send("The cost of the flight is €" + session.dialogData.flightPrice);
+        // session.dialogData.flightId = s; // TODO: Save the flight IDs
         builder.Prompts.choice(session, "Would you like to book this flight?", ["Book", "No"]);
       }
     });
@@ -108,7 +110,10 @@ bot.dialog("/routeQuery", [
       session.send("Good job on testing this path -- this will ask the user to enter their information and be saved.");
       session.send("For now I'm going to pretend you are " + session.dialogData.fullName + " who lives at 123 Fake Street.");
     }
-    session.send("Great! Would you like to use your credit card on file for the booking?");
+    session.send("Great! I'll use your credit card on file for the booking.");
+    session.sendTyping();
+    session.send("You're booked on the " + session.dialogData.flightDate + " from " + session.DialogData.origin + " to " + session.dialogData.destination);
+    session.send("I'm sending you the confirmation email with details now. Thanks " + session.dialogData.fullName);
     session.endDialog();
   }
 ]);
