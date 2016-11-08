@@ -122,8 +122,8 @@ bot.dialog("/routeQuery", [
       session.send("Great! I'll need some information from you to make the booking.");
       builder.Prompts.text(session, "What's your full name?");
     } else {
-      session.endDialog();
-      session.beginDialog('routeQuery');
+      // session.endDialog();
+      session.beginDialog('/routeQuery');
     }
   },
   function (session, results) {
@@ -157,6 +157,9 @@ bot.dialog("/routeQuery", [
                     builder.ReceiptItem.create(session, "€" + session.dialogData.flightPlanePrice, "Flight")
                 ])
                 .facts([
+                    builder.Fact.create(session, session.dialogData.fullName, "Name"),
+                    builder.Fact.create(session, session.dialogData.flightDate, "Flight Date"),
+                    builder.Fact.create(session, "1234567898", "Order Number"),                  
                     builder.Fact.create(session, "1234567898", "Order Number"),
                     builder.Fact.create(session, "VISA 4076", "Payment Method"),
                     builder.Fact.create(session, "E-Mail", "Delivery Method")
@@ -165,8 +168,8 @@ bot.dialog("/routeQuery", [
                 .total("€" + session.dialogData.flightPrice)
         ]);
     session.send(msg);
-    session.send("You're booked on the " + session.dialogData.flightDate + " from " + session.dialogData.origin + " to " + session.dialogData.destination);
-    session.send("I'm sending you the confirmation email with details now. Thanks " + session.dialogData.fullName);
+    // session.send("You're booked on the " + session.dialogData.flightDate + " from " + session.dialogData.origin + " to " + session.dialogData.destination);
+    // session.send("I'm sending you the confirmation email with details now. Thanks " + session.dialogData.fullName);
     session.endDialog();
   }
 ]);
