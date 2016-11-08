@@ -79,8 +79,8 @@ bot.dialog("/routeQuery", [
     availabitiesQuery(session.dialogData.origin, session.dialogData.destination, function(err, res) {
       console.log(res);
       if (err) {
-        session.send("Woops, I'm having trouble finding that information for you. Ask me again shortly!");
-        session.endDialog();
+        // session.send("Woops, I'm having trouble finding that information for you. Ask me again shortly!");
+        // session.endDialog();
 
         // API is having issues, so adding in test data
         session.dialogData.flightDate = "2016-11-28";
@@ -105,17 +105,11 @@ bot.dialog("/routeQuery", [
                 builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/d/d4/Logo_Air_Berlin_mit_Claim.jpg")
           ])
           .buttons([
-              builder.CardAction.imBack(session, "Book", "Book"),
-              builder.CardAction.imBack(session, "New Search", "new"),
-              builder.CardAction.imBack(session, "Exit", "end")
+              builder.CardAction.imBack(session, "book", "Book"),
+              builder.CardAction.imBack(session, "new", "New Search")
           ]);
       var msg = new builder.Message(session).attachments([card]);
       session.send(msg);
-
-        // session.send("There's a flight from " + session.dialogData.origin + " to " + session.dialogData.destination + " on " + session.dialogData.flightDate);
-        // session.send("The cost of the flight is €" + session.dialogData.flightPrice);
-        // session.dialogData.flightId = s; // TODO: Save the flight IDs
-        // builder.Prompts.choice(session, "Would you like to book this flight?", ["Book", "No"]);
     });
   },
   function (session, results) {
