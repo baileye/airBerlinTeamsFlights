@@ -122,6 +122,7 @@ bot.dialog("/routeQuery", [
       session.send("Great! I'll need some information from you to make the booking.");
       builder.Prompts.text(session, "What's your full name?");
     } else {
+      session.endDialog();
       session.beginDialog('routeQuery');
     }
   },
